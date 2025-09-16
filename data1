@@ -1,0 +1,64 @@
+# --- 라이브러리 임포트 ---
+import requests
+import pandas as pd
+import time
+
+# --- 기본 설정 ---
+# 중요! 본인의 Riot API 키를 "" 안에 붙여넣으세요.
+API_KEY = "RGAPI-90d47e96-0226-4669-9252-4e15bbbb7c1f"
+
+# 분석하고 싶은 유저의 소환사 이름과 태그를 입력하세요.
+summoner_name = "호날묵"
+tag_line = "KR1"
+match_count_to_fetch = 100 # 수집할 경기 수
+
+# --- 1. PUUID 조회 ---
+print("--- 1. PUUID 조회 시작 ---")
+account_url = f"https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{summoner_name}/{tag_line}?api_key={API_KEY}"
+response = requests.get(account_url)
+
+if response.status_code == 200:
+    account_data = response.json()
+    my_puuid = account_data['puuid']
+    print(f"'{summoner_name}'님의 PUUID 조회를 성공했습니다: {my_puuid}\n")
+else:
+    print(f"PUUID 조회 중 오류 발생: {response.status_code}")
+    my_puuid = None # 오류 발생 시 None으로 설정
+
+# --- 2. 데이터 수집 ---
+if my_puuid:
+    print(f"--- 2. 최근 {match_count_to_fetch}경기 데이터 수집 시작 ---")
+    match_ids_url = f"https://asia.api.riotgames.com/tft/match/v1/matches/by-puuid/{my_puuid}/ids?start=0&count={match_count_to_fetch}&api_key={API_KEY}"
+    response = requests.get(match_ids_url)
+    match_ids = response.json()
+
+    all_participants_data = []
+    for i, match_id in enumerate(match_ids):
+        match_detail_url = f"https://asia.api.riotgames.com/tft/match/v1/matches/{match_id}?api_key={API_KEY}"
+        response = requests.get(match_detail_url)
+        if response.status_code == 200:
+            match_data = response.json()
+            for p_data in match_data['info']['participants']:
+                # (데이터 추출 로직은 동일)
+                extracted_data = {
+                    'match_id': match_id, 'puuid': p_data['puuid'], '등수': p_data.get('placement', 0),
+                    '골드 사용량': p_data.get('gold_left', 0), '최종 레벨': p_data.get('level', 0),
+                    '가한 데미지': p_data.get('total_damage_dealt', 0), '받은 데미지': p_data.get('total_damage_taken', 0),
+                    '시너지 정보': [trait['name'] for trait in p_data.get('traits', []) if trait.get('tier_current', 0) > 0],
+                    '유닛 정보': [unit['character_id'] for unit in p_data.get('units', [])]
+                }
+                all_participants_data.append(extracted_data)
+
+        print(f"({i+1}/{len(match_ids)}) 매치 ID [{match_id}] 데이터 수집 완료. 1.5초 대기...")
+        time.sleep(1.5)
+
+    # --- 3. CSV 파일로 저장 ---
+    final_df = pd.DataFrame(all_participants_data)
+    # 파일 이름을 수집한 경기 수에 맞게 변경
+    file_name = f"tft_match_data_{match_count_to_fetch}games.csv"
+    final_df.to_csv(file_name, index=False, encoding='utf-8-sig')
+
+    print("\n--- 3. 데이터 저장 완료 ---")
+    print(f"\n총 {len(final_df)}개의 플레이어 데이터가 수집되었습니다. ({len(match_ids)} 경기)")
+    print(f"✅ 모든 데이터가 '{file_name}' 파일로 저장되었습니다.")
+    print("\n이제 다음 [2번 셀] 분석 코드를 실행하세요!")
