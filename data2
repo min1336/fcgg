@@ -1,0 +1,117 @@
+import pandas as pd
+import ast
+import os
+from google.colab import files
+
+# --- 1. 데이터 불러오기 (파일 업로드 기능 포함) ---
+# 데이터 수집 시 생성된 파일 이름을 정확히 입력해주세요.
+file_name = 'tft_match_data_100games.csv'
+
+# 현재 위치에 파일이 있는지 확인하고, 없으면 업로드를 요청합니다.
+if not os.path.exists(file_name):
+    print(f"'{file_name}' 파일이 없습니다. 수집한 데이터 파일을 업로드해주세요.")
+    uploaded = files.upload()
+    print(f"\n'{list(uploaded.keys())[0]}' 파일이 성공적으로 업로드되었습니다.")
+
+df = pd.read_csv(file_name)
+df['시너지 정보'] = df['시너지 정보'].apply(ast.literal_eval)
+df['유닛 정보'] = df['유닛 정보'].apply(ast.literal_eval)
+
+# --- 시너지 번역 사전 ---
+synergy_translation = {
+
+    'TFT15_CrystalGambit': '수정 갬빗',
+    'TFT15_StarGuardian': '별 수호자',
+    'TFT15_Strategist': '책략가',
+    'TFT15_Sniper': '저격수',
+    'TFT15_TheCrew': '크루',
+    'TFT15_Prodigy': '신동',
+    'TFT15_Duelist': '결투가',
+    'TFT15_Destroyer': '처형자',
+    'TFT15_DragonFist': '태세의 대가',
+    'TFT15_SoulFighter': '소울 파이터',
+    'TFT15_Protector': '봉쇄자',
+    'TFT15_SentaiRanger': '거대 메크',
+    'TFT15_Luchador': '프로레슬러',
+    'TFT15_Rosemother': '장미 어머니',
+    'TFT15_Empyrean': '악령',
+    'TFT15_ElTigre': '레슬링 챔피언',
+    'TFT15_Prodigy': '신동',
+    'TFT15_Edgelord': '이단아',
+    'TFT15_Spellslinger': '마법사',
+    'TFT15_Juggernaut': '전쟁기계',
+    'TFT15_Heavyweight': '헤비급',
+    'TFT15_Captain': '해적선장',
+    'TFT15_SupremeCells': '슈프림 셀',
+    'TFT15_Bastion': '요새',
+    'TFT15_OldMentor': '멘토',
+    'TFT15_MonsterTrainer': '괴물 트레이너',
+    'TFT15_BattleAcademia': '전투사관학교',
+}
+
+# --- 2. 분석 시작 ---
+if 'my_puuid' not in locals():
+    my_puuid = df['puuid'].iloc[0]
+
+my_games_df = df[df['puuid'] == my_puuid].copy()
+total_games = len(my_games_df)
+
+# --- 3. 전적 요약 (Summary) ---
+avg_placement = my_games_df['등수'].mean()
+top4_rate = (my_games_df['등수'] <= 4).sum() / total_games * 100
+win_rate = (my_games_df['등수'] == 1).sum() / total_games * 100
+
+print("="*40)
+print(f"📊 '호날묵'님의 최근 {total_games}게임 전적 요약")
+print("="*40)
+print(f"  - 평균 등수: {avg_placement:.2f} 등")
+print(f"  - 순방 확률 (Top 4): {top4_rate:.1f}%")
+print(f"  - 1등 확률: {win_rate:.1f}%")
+print("\n")
+
+
+# --- 4. 최근 게임 목록 (Recent Matches) ---
+print("="*40)
+print("📜 최근 10게임 목록")
+print("="*40)
+
+# 중복된 match_id를 제거하여 순수한 게임 목록만 가져옵니다.
+unique_matches = my_games_df.drop_duplicates(subset='match_id').head(10)
+
+for index, game in unique_matches.iterrows():
+    placement = game['등수']
+    
+    # 등수에 따라 메달 이모지 추가
+    if placement == 1:
+        medal = "🥇"
+    elif placement == 2:
+        medal = "🥈"
+    elif placement == 3:
+        medal = "🥉"
+    else:
+        medal = "⬛"
+
+    # 시너지 한글로 번역
+    synergies_korean = [synergy_translation.get(s, s) for s in game['시너지 정보']]
+    
+    print(f"{medal} {placement}등")
+    print(f"  - 시너지: {', '.join(synergies_korean)}")
+    print("-" * 20)
+
+
+# --- 5. 심층 분석 (Deep Dive) ---
+synergies_df = my_games_df.explode('시너지 정보')
+# 심층 분석 전, 시너지 이름을 모두 한글로 번역
+synergies_df['시너지 정보'] = synergies_df['시너지 정보'].apply(lambda s: synergy_translation.get(s, s))
+
+top_synergies = synergies_df['시너지 정보'].value_counts()
+synergy_placement = synergies_df.groupby('시너지 정보')['등수'].mean().sort_values()
+
+print("\n" + "="*40)
+print("💡 AI 코치의 심층 분석")
+print("="*40)
+print("\n--- 🔥 가장 많이 플레이한 조합 Top 5 ---")
+print(top_synergies.head(5))
+
+print("\n--- 🏆 '승리 공식' 조합 Top 5 (평균 등수 기준) ---")
+print(synergy_placement.head(5))
