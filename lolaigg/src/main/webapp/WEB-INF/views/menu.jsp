@@ -15,7 +15,7 @@
 		<tr>
 				<td><button onclick="location.href='user.do'">소환사 정보 조회</button></td>
 				<td><button onclick="location.href='api.do'">소환사</button></td>
-				<td><button onclick="location.href='api.do'">api 테스트</button></td>
+				<td><button onclick="location.href='chat.do'">챗봇</button></td>
 		</tr>
 </table>
 </body>
