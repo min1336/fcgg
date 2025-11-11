@@ -1,0 +1,205 @@
+/*
+=================================================
+  덱 공략 상세 페이지 (guide_detail.jsp) 전용 스타일
+=================================================
+*/
+
+.guide-layout-container {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #444;
+}
+
+
+.guide-layout-board {
+    position: relative;
+    width: 600px;
+    height: 300px; 
+    
+    /* 배치판 중앙 정렬 */
+    margin: 40px auto 30px; 
+
+    padding: 0;
+    box-sizing: content-box;
+}
+
+/* 1. 배경 6각형 그리드 */
+.hex-grid-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    /* 4개 행, 각 행 높이 69px (육각형 높이 92px의 3/4) */
+    grid-template-rows: repeat(4, 69px); 
+    z-index: 1;
+}
+
+.hex-row {
+    display: flex;
+    width: 560px; 
+    margin: 0 auto;
+}
+
+/* 짝수 행을 오른쪽으로 절반 이동시켜 엇갈리게 배치 */
+.hex-row.row-2, .hex-row.row-4 {
+    transform: translateX(40px);
+}
+
+.hex-cell {
+    width: 80px;  /* 육각형 너비 */
+    height: 92px; /* 육각형 높이 */
+    flex-shrink: 0;
+    
+    /* 1. 안쪽 선을 위한 padding (2px) */
+    padding: 2px;
+    /* 2. 바깥쪽 선을 위한 border (2px) */
+    border: 2px solid #333;
+    /* 3. 테두리/패딩 영역의 배경색 */
+    background-color: #333;
+    /* 4. 헥사곤 모양으로 자릅니다. */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-sizing: border-box; /* 패딩 포함 크기 유지 */
+}
+
+.hex-cell-inner {
+    width: 100%;
+    height: 100%;
+    /* 4. 내부 채우기 색상(#1a1a1a)을 지정합니다. */
+    background-color: #1a1a1a;
+    /* 5. 기존 border는 제거합니다. */
+    border: none; 
+    /* 6. 부모와 동일하게 헥사곤 모양으로 자릅니다. */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-sizing: border-box;
+}
+
+
+/* 2. 유닛 아이콘이 올라갈 레이어 */
+.unit-placement-layer {
+    position: absolute; /* 배경 그리드 위에 겹침 */
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(4, 69px);
+    grid-template-columns: 20px repeat(7, 80px) 20px;
+    z-index: 2; /* 6각형보다 위에 표시 */
+}
+
+
+/* * 배치된 유닛 스타일 (기존 unit-display 재활용) 
+ * (두꺼운 테두리, 간격 유지)
+ */
+.placed-unit.unit-display {
+    /* CSS 변수(--row, --col)를 사용하여 위치 결정 */
+    grid-row: var(--row);
+    grid-column: calc(var(--col) + 1); 
+
+    /* hex-cell(80x92)보다 작게 설정하여 간격을 만듭니다. */
+    width: 76px;
+    height: 88px; 
+    
+    margin: 22.5px 0 0 0;
+
+    align-self: center; /* 행의 세로 중앙 */
+    justify-self: center; /* 열의 가로 중앙 */
+    
+    margin-bottom: 0; 
+    padding-bottom: 0;
+    transform: none; 
+    
+    /* user_result_style에서 상속받은 배경 제거 */
+    background: transparent;
+
+    /* 1. 기존 border 속성 제거 */
+    border: none;
+    
+    /* 2. 테두리 두께만큼 padding을 줍니다. */
+    padding: 5px; /* 5px짜리 테두리 */
+    
+    /* 3. 코스트별 색상이 이 background-color에 적용됩니다. (아래 .unit-cost-X 규칙 참조) */
+    background-color: var(--cost1); /* 기본값(1코스트) */
+
+    box-sizing: border-box; /* 패딩이 76x88 크기 안에 포함되도록 함 */
+
+    /* 4. 헥사곤 모양으로 자르기 (부모/테두리) */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    
+    /* 5. 내부 이미지가 테두리를 넘지 않도록 함 (중요) */
+    overflow: visible; 
+}
+
+/* 코스트별 배경색(테두리색) 지정 */
+.placed-unit.unit-cost-1 { background-color: var(--cost1); }
+.placed-unit.unit-cost-2 { background-color: var(--cost2); }
+.placed-unit.unit-cost-3 { background-color: var(--cost3); }
+.placed-unit.unit-cost-4 { background-color: var(--cost4); }
+.placed-unit.unit-cost-5 { background-color: var(--cost5); }
+
+
+/* 짝수 행을 오른쪽으로 절반 이동 */
+.placed-unit.even-row {
+    transform: translateX(40px); /* 40px (육각형 너비의 절반) 이동 */
+}
+
+/* 성급/아이템 위치 재조정 (부모 크기가 줄었으므로 재조정) */
+.placed-unit .stars {
+    top: -12px; /* 살짝 조정 */
+    font-size: 0.85em; /* 살짝 조정 */
+    z-index: 3; 
+}
+.placed-unit .item-icons {
+    bottom: 6px; /* 살짝 조정 */
+    z-index: 3; 
+}
+.placed-unit .item-icon {
+    width: 20px; /* 살짝 조정 */
+    height: 20px; /* 살짝 조정 */
+}
+
+
+/* 챔피언 아이콘 컨테이너 (단순 래퍼) */
+.placed-unit .champ-icon-container {
+    width: 100%; 
+    height: 100%; 
+    border-radius: 0; 
+    
+    /* 6. 부모(테두리)와 동일한 모양으로 자식(이미지 컨테이너)을 잘라냅니다. */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+
+/*.placed-unit .champ-icon {
+     이전에 수정한 '좌우로 늘리기' 값 유지 
+    transform: scaleY(1.6) scaleX(1.9) translateX(-20%) translateY(10%);
+    transform-origin: center center;
+}*/
+
+
+.guide-section-container {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.guide-section-container h2 {
+    text-align: center;
+}
+
+/* 공략 설명 텍스트 */
+.guide-explanation {
+    text-align: left;
+    background: #202020;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.guide-explanation p {
+    color: #ccc;
+    line-height: 1.7;
+    font-size: 1.05em;
+    margin-bottom: 15px;
+}

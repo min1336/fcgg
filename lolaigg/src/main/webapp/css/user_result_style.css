@@ -1,0 +1,484 @@
+/* 파일 경로: lolaigg/src/main/webapp/css/user_result_style.css */
+
+/* 폰트 및 기본 설정 */
+body {
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; /* 한국어 환경 고려 */
+    margin: 0; /* */
+    padding: 0; /* */
+    background: #111; /* 기본 블랙 배경 */ /* */
+    color: #ddd; /* 기본 텍스트 색상 약간 밝게 */
+    min-height: 100vh; /* */
+    display: flex; /* */
+    flex-direction: column;
+    align-items: center; /* */
+    padding-top: 40px;
+    padding-bottom: 40px;
+    box-sizing: border-box;
+}
+
+/* 네온 그린 색상 변수 */
+:root {
+    --neon-green: #00ff41;
+    --dark-green: #00a02a;
+    --highlight-bg: rgba(0, 255, 65, 0.1);
+    --card-border: rgba(0, 255, 65, 0.3);
+    /* 코스트별 색상 */
+    --cost1: #808080; /* Grey */
+    --cost2: #1abc9c; /* Green */
+    --cost3: #3498db; /* Blue */
+    --cost4: #9b59b6; /* Purple */
+    --cost5: #f1c40f; /* Gold */
+    --error-red: #ff4d4d;
+    --warning-yellow: #f1c40f;
+}
+
+/* 카드 기본 스타일 */
+.card {
+    background: #1e1e1e;
+    border-radius: 8px; /* */
+    border: 1px solid var(--card-border);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); /* 네온 효과 */ /* */
+    padding: 30px; /* */
+    max-width: 1000px;
+    width: 90%; /* 화면 너비에 따라 조절 */ /* */
+    margin-bottom: 25px;
+    text-align: center; /* */
+    animation: fadeIn 0.6s ease-in-out; /* */
+    box-sizing: border-box;
+}
+
+/* 섹션 제목 */
+h2 {
+    color: var(--neon-green); /* */
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--dark-green);
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 20px; /* */
+    font-size: 1.4em; /* 제목 크기 조정 */
+}
+
+/* 하이라이트 텍스트 */
+.highlight {
+    color: var(--neon-green);
+    font-weight: bold; /* */
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-block; /* */
+    padding: 10px 18px; /* 패딩 조정 */ /* */
+    border-radius: 4px; /* */
+    background: var(--dark-green); /* */
+    color: #000; /* */
+    font-weight: bold; /* */
+    text-decoration: none; /* */
+    border: none; /* */
+    cursor: pointer; /* */
+    transition: background 0.3s, box-shadow 0.3s; /* */
+    font-size: 0.95em; /* 버튼 폰트 크기 조정 */ /* */
+    margin: 5px; /* 버튼 간 간격 */
+}
+
+.btn:hover {
+    background: var(--neon-green); /* */
+    box-shadow: 0 0 8px var(--neon-green); /* */
+}
+
+.btn-refresh {
+    /* margin-right: 15px; */ /* 개별 마진 대신 gap 사용 */
+}
+
+/* 프로필 섹션 */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* 버튼과의 간격 */
+}
+
+.profile-text {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ .profile-text h2 { /* 소환사 이름 스타일 */
+    margin-bottom: 10px;
+    font-size: 1.8em;
+ }
+
+.profile-text p {
+    margin: 8px 0; /* 문단 간격 조정 */ /* */
+    font-size: 1.1em;
+    color: #ccc; /* 약간 밝은 텍스트 */ /* */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rank-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle; /* */
+}
+
+
+/* 메시지 스타일 (오류, 경고) */
+.message {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.error-message {
+    color: #fff;
+    background-color: rgba(255, 77, 77, 0.7);
+    border: 1px solid var(--error-red);
+}
+.warning-message {
+     color: #000;
+     background-color: rgba(241, 196, 15, 0.8);
+     border: 1px solid var(--warning-yellow);
+}
+
+
+/* 통계 섹션 */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: #2a2a2a;
+    padding: 20px;
+    border-radius: 4px;
+    width: calc(50% - 20px);
+    min-width: 200px;
+    text-align: center;
+    border-left: 4px solid var(--neon-green);
+    box-sizing: border-box;
+}
+
+.stat-item p {
+    margin: 0 0 8px 0;
+    font-size: 0.9em;
+    color: #aaa;
+}
+ .stat-item h3 {
+    margin: 5px 0 0 0;
+    font-size: 1.3em;
+    word-break: keep-all;
+ }
+ .stat-item img.stat-champ-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 2px solid var(--dark-green); /* */
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+
+/* 매치 히스토리 섹션 */
+.match-list-card h2 {
+    margin-bottom: 15px;
+}
+
+.match-card {
+    background: #282828;
+    padding: 15px 20px;
+    text-align: left;
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 255, 65, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 6px;
+}
+
+.match-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 18px rgba(0, 255, 65, 0.4);
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #444;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.placement-badge {
+    font-size: 1.6em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #000;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    min-width: 40px;
+    text-align: center;
+}
+
+.placement-1 { background-color: #FFD700; color: #000; box-shadow: 0 0 8px #FFD700;} /* */
+.placement-2-4 { background-color: var(--neon-green); color: #000; } /* */
+.placement-5-8 { background-color: #6c757d; color: #fff; } /* */
+
+.match-details-right {
+     display: flex;
+     gap: 15px;
+     font-size: 0.9em;
+     color: #bbb;
+}
+
+.match-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.detail-label {
+    color: #888;
+    margin-right: 8px;
+    font-weight: normal;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 3px 7px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.4;
+    border: 1px solid; /* 테두리 추가 */
+}
+
+/* --- 시너지 태그 스타일 수정 --- */
+.trait-tag {
+    position: relative;
+    width: 32px; /* 육각형 크기 조정 */
+    height: 36px; /* 육각형 크기 조정 (높이가 너비보다 약간 김) */
+    background-color: #555; /* 기본 배경 */
+    margin: 5px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* 육각형 모양 */
+    display: inline-flex; /* 내부 아이콘 정렬 위해 */
+    justify-content: center;
+    align-items: center;
+    border: none; /* 기존 테두리 제거 */
+    padding: 0; /* 기존 패딩 제거 */
+}
+
+/* 육각형 안의 아이콘 스타일 */
+.trait-tag img {
+    position: static; /* absolute 제거 */
+    transform: none; /* transform 제거 */
+    width: 80%; /* 육각형 크기에 맞춰 조정 */
+    height: auto;
+    border-radius: 2px;
+    filter: grayscale(100%) brightness(0%);
+}
+
+/* 시너지 이름 숨김 (아이콘만 표시할 경우) */
+.trait-tag .trait-name {
+    display: none;
+}
+
+/* 등급별 육각형 스타일 (입체감 추가) */
+.trait-style-1 { /* 브론즈 */
+    background-image: linear-gradient(145deg, #cd7f32, #a05a2c); /* 브론즈 그라데이션 */
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.5), inset 0 -2px 3px rgba(255, 200, 150, 0.3), 0 2px 4px rgba(0,0,0,0.6);
+}
+.trait-style-2 { /* 실버 */
+    background-image: linear-gradient(145deg, #e0e0e0, #a8a8a8); /* 실버 그라데이션 */
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.3), inset 0 -2px 3px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0,0,0,0.5);
+}
+.trait-unique { /* 고유 (예시 색상 기반) */
+     background-image: linear-gradient(145deg, #f89d77, #c76b47); /* 고유 등급 그라데이션 */
+     box-shadow: inset 0 2px 3px rgba(80, 40, 20, 0.5), inset 0 -2px 3px rgba(255, 220, 200, 0.3), 0 2px 4px rgba(0,0,0,0.6);
+}
+.trait-style-3 { /* 골드 */
+    background-image: linear-gradient(145deg, #ffd700, #cca300); /* 골드 그라데이션 */
+    box-shadow: inset 0 2px 3px rgba(100, 70, 0, 0.5), inset 0 -2px 3px rgba(255, 255, 180, 0.4), 0 2px 4px rgba(0,0,0,0.6);
+}
+.trait-style-4 { /* 프리즘 */
+    background-image: linear-gradient(135deg, #ffccff, #ccffff, #ffffcc, #ccffcc); /* 프리즘 그라데이션 */
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.2), inset 0 -2px 3px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0,0,0,0.4), 0 0 5px rgba(200, 200, 255, 0.5); /* 약간의 외부 광선 효과 추가 */
+}
+
+/* 고유 등급 예시 (태세의 대가) */
+.trait-unique {
+     background-color: #e88d67;
+     border: 1px solid #c76b47;
+}
+
+
+/* --- 유닛 표시 관련 스타일 --- */
+
+/* 유닛 컨테이너 (챔피언 목록) */
+.unit-container {
+    gap: 10px 5px; /* 세로 간격, 가로 간격 */ /* */
+}
+
+/* 개별 유닛 표시 컨테이너 */
+.unit-display {
+    display: inline-block; /* 가로 배치 */
+    position: relative; /* 성급 위치 기준 */
+    text-align: center;
+    width: 40px; /* 챔피언 아이콘 크기에 맞춤 */
+    vertical-align: top; /* 정렬 기준 */
+    margin-bottom: 22px; /* 아이템 공간 확보 */
+    border: 2px solid transparent; /* 비용별 테두리 공간 확보 */
+    border-radius: 4px; /* 테두리 둥글게 */
+    padding-bottom: 2px; /* 아이템과의 간격 */
+    background: rgba(0,0,0,0.2); /* 약간의 배경 */
+}
+
+/* 성급(별) 스타일 */
+.stars {
+    position: absolute;
+    top: -14px; /* 아이콘 위로 배치 (값 조정) */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85em; /* 별 크기 조정 */
+    /* color: #ffd700; 삭제: 기본 금색 별 제거 */
+    text-shadow: 0 0 3px black; /* 가독성 위한 그림자 */
+    white-space: nowrap; /* 별이 줄바꿈되지 않도록 */
+    z-index: 2; /* 아이콘보다 위에 표시 */
+}
+
+/* 코스트(티어)별 별 색상 지정 */
+.unit-cost-1 .stars { color: var(--cost1); }
+.unit-cost-2 .stars { color: var(--cost2); }
+.unit-cost-3 .stars { color: var(--cost3); }
+.unit-cost-4 .stars { color: var(--cost4); }
+.unit-cost-5 .stars { color: var(--cost5); }
+
+
+/* 챔피언 아이콘 컨테이너 */
+.champ-icon-container {
+    width: 40px;
+    height: 40px;
+    position: relative; /* 필요 시 내부 요소 배치 기준 */ /* */
+    overflow: hidden; /* 테두리 밖 이미지 숨김 */
+    border-radius: 2px; /* 아이콘 모서리 살짝 둥글게 */
+}
+
+.champ-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    transform: scaleY(1.6) scaleX(1.9) translateX(-20%) translateY(10%);
+    transform-origin: center center;
+}
+
+/* 챔피언 이미지 없을 때 텍스트 스타일 */
+.unit-name-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #333;
+    font-size: 0.7em;
+    color: #888;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px;
+    box-sizing: border-box; /* */
+}
+
+
+/* 아이템 아이콘 컨테이너 */
+.item-icons {
+    position: absolute; /* 챔피언 아래에 고정 */ /* */
+    bottom: -20px; /* 챔피언 아이콘 아래 배치 (아이템 크기 + 간격 고려) */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 1px; /* 아이템 사이 간격 */
+    width: 100%; /* 부모 너비에 맞춤 */
+}
+
+/* 아이템 아이콘 스타일 */
+.item-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid #555; /* 아이템 테두리 */ /* */
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+/* 비용(티어)별 테두리 색상 */
+.unit-cost-1 { border-color: var(--cost1) !important; }
+.unit-cost-2 { border-color: var(--cost2) !important; }
+.unit-cost-3 { border-color: var(--cost3) !important; }
+.unit-cost-4 { border-color: var(--cost4) !important; }
+.unit-cost-5 { border-color: var(--cost5) !important; }
+
+/* 기존 .unit-tag 관련 CSS 제거 또는 수정 */
+/* .unit-tag { display: none; } */ /* 예시: 기존 태그 숨기기 */
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); } /* */
+    to { opacity: 1; transform: translateY(0); } /* */
+}
+
+/* 모바일 반응형 (예시) */
+@media (max-width: 600px) {
+    .card {
+        width: 95%;
+        padding: 20px;
+    }
+/*    .stats-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stat-item {
+        width: 90%;
+        min-width: unset;
+    }
+    .match-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .match-details-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .btn {
+         width: calc(50% - 10px);
+         box-sizing: border-box;
+         margin: 5px;
+    }
+    .profile-text h2 {
+        font-size: 1.5em;
+    }
+    .rank-icon {
+        width: 32px;
+        height: 32px;
+    }
+     추가: 모바일에서 유닛 아이템 간격 등 조정 
+    .unit-display { width: 40px; margin-bottom: 20px;}
+    .champ-icon-container { width: 40px; height: 40px; }
+    .item-icons { bottom: -18px; }
+    .item-icon { width: 13px; height: 13px;}
+    .stars { top: -10px; font-size: 0.8em; }  모바일 별 크기 조정 */
+}
