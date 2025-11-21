@@ -10,47 +10,44 @@
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-        background-color: #f0f2f5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        /* 🌟 [수정] 위젯이므로 body 배경색과 여백 제거 */
+        background-color: #ffffff; 
         margin: 0;
         color: #333;
     }
 
+    /* 🌟 [수정] #chat-container가 화면 전체가 아닌 100%를 채우도록 변경 */
     #chat-container {
         width: 100%;
-        max-width: 800px;
-        height: 85vh;
-        min-height: 600px;
+        height: 100vh; /* 🌟 iframe 높이에 꽉 차도록 100vh로 변경 */
         background-color: #ffffff;
-        border-radius: 16px; 
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+        border-radius: 0; /* 🌟 위젯에서는 둥근 모서리 제거 */
+        box-shadow: none;   /* 🌟 위젯에서는 그림자 제거 */
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        /* 🌟 min-height, max-width 제거 */
     }
 
     #chat-header {
         background: linear-gradient(135deg, #007bff, #0056b3);
         color: white;
-        padding: 20px 25px;
+        padding: 18px 20px; /* 🌟 패딩 살짝 줄임 */
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 1.1rem; /* 🌟 폰트 살짝 줄임 */
         font-weight: 700;
-        text-shadow: 0 1px 1px rgba(0,0,0,0.1);
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         z-index: 10;
+        flex-shrink: 0; /* 🌟 헤더 높이 고정 */
     }
 
     #chat-window {
         flex-grow: 1;
-        padding: 25px;
+        padding: 20px; /* 🌟 패딩 살짝 줄임 */
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 15px; /* 🌟 간격 살짝 줄임 */
     }
     
     /* === 스크롤바 디자인 (Webkit 브라우저) === */
@@ -89,22 +86,27 @@
         animation: fadeIn 0.3s ease-out;
     }
 
-    .message.user {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-        border-bottom-right-radius: 6px;
-        align-self: flex-end;
-        box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
-    }
-
+    /* 🌟 .message.bot 내부 폰트 크기 등 미세 조정 (선택 사항) */
     .message.bot {
+        font-size: 0.95rem; 
+        /* ... 기존 .message.bot 스타일 ... */
         background-color: #f1f3f5;
         color: #212529;
         border-bottom-left-radius: 6px;
         align-self: flex-start;
         border: 1px solid #e9ecef;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-        word-break: keep-all; /* 한글 단어 쪼개짐 방지 */
+        word-break: keep-all;
+    }
+    
+    .message.user {
+         font-size: 0.95rem;
+        /* ... 기존 .message.user 스타일 ... */
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-bottom-right-radius: 6px;
+        align-self: flex-end;
+        box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
     }
     
     /* 3. 챗봇 응답(마크다운 변환) 스타일 (개선) */
@@ -162,7 +164,7 @@
 
     #chat-form {
         display: flex;
-        padding: 20px 25px;
+        padding: 15px 20px; /* 🌟 패딩 살짝 줄임 */
         border-top: 1px solid #e0e0e0;
         background-color: #ffffff;
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
@@ -171,11 +173,11 @@
 
     #message-input {
         flex-grow: 1;
-        padding: 14px 20px;
+        padding: 12px 18px; /* 🌟 패딩 살짝 줄임 */
         border: 1px solid #ddd;
-        border-radius: 24px;
-        font-size: 1rem;
-        margin-right: 12px;
+        border-radius: 20px; /* 🌟 살짝 줄임 */
+        font-size: 0.95rem;  /* 🌟 폰트 살짝 줄임 */
+        margin-right: 10px;
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
@@ -187,8 +189,8 @@
 
     #send-button {
         flex-shrink: 0;
-        width: 48px;
-        height: 48px;
+        width: 44px;  /* 🌟 버튼 크기 살짝 줄임 */
+        height: 44px; /* 🌟 버튼 크기 살짝 줄임 */
         background-color: #007bff;
         color: white;
         border: none;

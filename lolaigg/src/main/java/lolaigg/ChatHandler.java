@@ -7,13 +7,17 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
-
+import java.util.List; // 🌟 추가된 import
+import java.util.stream.Collectors; // 🌟 추가된 import
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+// 🌟 MetaDeck DTO import 추가
+import lolaigg.MetaDeck;
 
 public class ChatHandler implements CommandHandler {
 
@@ -49,18 +53,46 @@ public class ChatHandler implements CommandHandler {
                 // 1. Api 객체 생성
                 Api api = new Api();
                 
-                // 2. DB에서 '정답지' 데이터 가져오기 (Api.java에 추가한 메서드)
-                String challengerDeckData = api.getChallengerDeckSummary(); 
+                // 🌟 [핵심 수정] 🌟
+                // 2. DB에서 '추천 메타 덱' 데이터 가져오기 (Api.java에 있는 메서드)
+                List<MetaDeck> metaDecks = api.getMetaDecks(); //
+                
+                // 3. 덱 리스트를 AI 프롬프트용 문자열로 변환
+                StringBuilder deckDataBuilder = new StringBuilder();
+                if (metaDecks == null || metaDecks.isEmpty()) {
+                    deckDataBuilder.append("현재 추천 메타 덱 정보가 없습니다.\n");
+                } else {
+                    for (MetaDeck deck : metaDecks) { //
+                        deckDataBuilder.append("덱 이름: ").append(deck.getDeckName());
+                        if (deck.isHot()) {
+                            deckDataBuilder.append(" (HOT!)");
+                        }
+                        deckDataBuilder.append("\n");
+                        
+                        // 유닛 목록 (championId만 추출)
+                        String units = deck.getUnits().stream()
+                                           .map(unitInfo -> unitInfo.getChampionId()) //
+                                           .collect(Collectors.joining(", "));
+                        deckDataBuilder.append("  - 핵심 유닛: ").append(units).append("\n");
+                        
+                        // 특성 목록 (name만 추출)
+                        String traits = deck.getTraits().stream()
+                                            .map(traitInfo -> traitInfo.getName()) //
+                                            .collect(Collectors.joining(", "));
+                        deckDataBuilder.append("  - 주요 특성: ").append(traits).append("\n\n");
+                    }
+                }
+                String recommendedDeckData = deckDataBuilder.toString();
                 
                 // 🌟 [핵심 수정] 🌟
-                // AI에게 상황별로 다르게 행동하도록 지시하는 프롬프트
+                // AI에게 상황별로 다르게 행동하도록 지시하는 프롬프트 (데이터 소스 설명 변경)
                 String prompt = "당신은 '전략적 팀 전투(TFT)' 덱 추천 전문가입니다.\n\n" +
-                                "아래는 참고용 최신 챌린저 랭커 메타 데이터('정답지')입니다.\n" +
-                                "--- (참고용 메타 데이터 시작) ---\n" +
-                                challengerDeckData + "\n" +
-                                "--- (참고용 메타 데이터 끝) ---\n\n" +
+                                "아래는 참고용 '추천 메타 덱' 목록입니다. 이 목록은 챌린저 랭커 데이터가 아닌, 사이트 관리자가 직접 선별한 추천 덱 목록('정답지')입니다.\n" +
+                                "--- (참고용 추천 메타 덱 시작) ---\n" +
+                                recommendedDeckData + "\n" + // 🌟 변수명 변경
+                                "--- (참고용 추천 메타 덱 끝) ---\n\n" +
                                 "이제 사용자의 질문에 답해주세요. 지침은 다음과 같습니다:\n" +
-                                "1. **[일반 추천 요청]**: 사용자가 '덱 추천해줘', '뭐가 좋아?', '1티어 덱 알려줘' 등 **일반적인 덱 추천**을 원한다면, 위 '참고용 메타 데이터'를 **핵심 근거**로 삼아 1티어 덱을 추천해주세요.\n" +
+                                "1. **[일반 추천 요청]**: 사용자가 '덱 추천해줘', '뭐가 좋아?', '1티어 덱 알려줘' 등 **일반적인 덱 추천**을 원한다면, 위 '참고용 추천 메타 덱' 목록을 **핵심 근거**로 삼아 덱을 추천해주세요. (HOT! 표시가 있다면 우선적으로 언급해주세요.)\n" +
                                 "2. **[특정 덱 요청]**: 사용자가 '애니 덱', '펑크 리롤 덱', '수정 갬빗'처럼 **특정 기물이나 시너지를 명시**했다면, 메타 데이터에 없더라도 **사용자가 요청한 덱을 구성하는 방법**을 최우선으로 알려주세요. (이때 메타 데이터는 아이템 조합 시 참고만 하세요.)\n" +
                                 "3. **[인사 또는 불명확한 요청]**: 사용자의 메시지가 '안녕', 'ㅎㅇ', 'ㄴ', 'ㅇㅇ', '네' 등 **단순한 인사, 대답이거나 무슨 말인지 모르겠다면**, 덱을 추천하지 말고, \"안녕하세요! 어떤 덱을 추천해 드릴까요?\" 또는 \"어떤 점이 궁금하신가요?\"처럼 대화를 이어가는 **인사말**을 하세요.\n\n" + 
                                 "사용자 질문: " + userMessage;

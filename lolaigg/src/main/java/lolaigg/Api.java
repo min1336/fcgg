@@ -57,7 +57,7 @@ public class Api {
 
 	//API 관련 모든 처리 담당
 	// API 키는 외부에 노출되지 않도록 설정 파일이나 환경 변수로 관리하는 것이 좋습니다.
-	private static final String API_KEY = "RGAPI-74a82ce7-e3cb-4766-a8db-45eb2d2678c2"; // 실제 키로 교체 필요
+	private static final String API_KEY = "RGAPI-e380153f-9b82-4a48-88a8-87d2ea9cb4f4"; // 실제 키로 교체 필요
 
 	/**
 	 * PUUID로 최근 랭크 게임 매치 ID 목록(최대 30개)을 가져옵니다.

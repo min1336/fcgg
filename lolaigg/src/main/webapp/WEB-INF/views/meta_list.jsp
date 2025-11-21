@@ -10,6 +10,7 @@
 <%-- user_result.jsp와 동일한 CSS 파일을 사용합니다 --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/user_result_style.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/meta_list_style.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/chat_widget.css">
 </head>
 <body>
 
@@ -306,6 +307,84 @@
         }
     </script>
     <%-- ▲▲▲▲▲ 스크립트 추가 끝 ▲▲▲▲▲ --%>
+	<div class="chat-widget-container" id="chatWidgetContainer">
+        <iframe src="chat.do"></iframe>
+    </div>
 
+    <button class="chat-bubble-button" id="chatBubbleButton">
+        <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 0 24 24" width="28px" fill="#FFFFFF">
+            <path d="M0 0h24v24H0V0z" fill="none"/>
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12zM7 9h10v2H7zm0 3h7v2H7z"/>
+        </svg>
+    </button>
+
+	<script>
+            
+            // 1. 챗봇 상태를 확인하고 UI에 적용하는 (재사용될) 함수
+            function checkChatWidgetState() {
+                const chatWidgetContainer = document.getElementById('chatWidgetContainer');
+                const storageKey = 'tftggChatWidgetState';
+                
+                if (!chatWidgetContainer) {
+                    console.error("checkChatWidgetState: 챗봇 컨테이너를 찾을 수 없습니다.");
+                    return;
+                }
+
+                try {
+                    const currentState = localStorage.getItem(storageKey);
+                    if (currentState === 'open') {
+                        chatWidgetContainer.classList.add('active');
+                    } else {
+                        // 'closed'이거나 null일 때
+                        chatWidgetContainer.classList.remove('active');
+                    }
+                } catch (e) {
+                    console.error("localStorage 접근 중 오류 발생:", e);
+                }
+            }
+
+            // 2. [최초 로드] DOMContentLoaded - 클릭 리스너 등록 및 최초 상태 확인
+            document.addEventListener('DOMContentLoaded', function() {
+                const chatBubbleButton = document.getElementById('chatBubbleButton');
+                const chatWidgetContainer = document.getElementById('chatWidgetContainer');
+                const storageKey = 'tftggChatWidgetState';
+
+                if (chatBubbleButton && chatWidgetContainer) {
+                    
+                    // 2-1. 클릭 이벤트 리스너 등록 (한 번만 하면 됨)
+                    chatBubbleButton.addEventListener('click', function() {
+                        chatWidgetContainer.classList.toggle('active');
+                        try {
+                            if (chatWidgetContainer.classList.contains('active')) {
+                                localStorage.setItem(storageKey, 'open');
+                            } else {
+                                localStorage.setItem(storageKey, 'closed');
+                            }
+                        } catch (e) {
+                             console.error("localStorage 저장 중 오류 발생:", e);
+                        }
+                    });
+
+                    // 2-2. 최초 페이지 로드 시 상태 확인
+                    checkChatWidgetState();
+                    
+                } else {
+                    console.error("DOMContentLoaded: 챗봇 위젯 요소를 찾을 수 없습니다.");
+                }
+            });
+
+            // 3. [뒤로가기 / 복원] 'pageshow' - bfcache 복원 시 상태 다시 확인
+            // 이 리스너는 DOMContentLoaded와 *별개로* 전역에 등록합니다.
+            window.addEventListener('pageshow', function(event) {
+                // event.persisted가 true이면 bfcache (뒤로가기 캐시)에서 로드된 것
+                if (event.persisted) {
+                    // DOMContentLoaded가 실행되지 않았으므로,
+                    // 여기서 localStorage 상태를 다시 확인하여 UI에 적용합니다.
+                    console.log("페이지가 bfcache에서 복원되었습니다. 챗봇 상태를 다시 확인합니다.");
+                    checkChatWidgetState();
+                }
+            });
+            
+        </script>
 </body>
 </html>
